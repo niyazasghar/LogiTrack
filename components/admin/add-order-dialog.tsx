@@ -124,7 +124,7 @@ export function AddOrderDialog({ onAddOrder }: AddOrderDialogProps) {
                 value={formData.client}
                 onChange={(e) => handleChange("client", e.target.value)}
                 className="col-span-3"
-                placeholder="e.g. John Smith"
+                placeholder="e.g. UrbanMart Retail"
                 required
               />
             </div>
@@ -137,7 +137,7 @@ export function AddOrderDialog({ onAddOrder }: AddOrderDialogProps) {
                 value={formData.from}
                 onChange={(e) => handleChange("from", e.target.value)}
                 className="col-span-3"
-                placeholder="e.g. New York, NY"
+                placeholder="e.g. Koramangala Fulfillment Hub"
                 required
               />
             </div>
@@ -150,7 +150,7 @@ export function AddOrderDialog({ onAddOrder }: AddOrderDialogProps) {
                 value={formData.to}
                 onChange={(e) => handleChange("to", e.target.value)}
                 className="col-span-3"
-                placeholder="e.g. Boston, MA"
+                placeholder="e.g. Whitefield Delivery Dock"
                 required
               />
             </div>

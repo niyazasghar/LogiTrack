@@ -148,7 +148,7 @@ export function AddVehicleDialog({ onAddVehicle }: AddVehicleDialogProps) {
                 value={formData.model}
                 onChange={(e) => handleChange("model", e.target.value)}
                 className="col-span-3"
-                placeholder="e.g. Ford F-150"
+                placeholder="e.g. Tata Ultra Logistics"
                 required
               />
             </div>
@@ -161,7 +161,7 @@ export function AddVehicleDialog({ onAddVehicle }: AddVehicleDialogProps) {
                 value={formData.licensePlate}
                 onChange={(e) => handleChange("licensePlate", e.target.value)}
                 className="col-span-3"
-                placeholder="e.g. NY-12345"
+                placeholder="e.g. KA-05-LF-1821"
                 required
               />
             </div>

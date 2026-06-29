@@ -7,8 +7,8 @@ import { Eye } from "lucide-react"
 const orders = [
   {
     id: "ORD-001",
-    pickup: "New York, NY",
-    drop: "Boston, MA",
+    pickup: "Bengaluru Central",
+    drop: "Whitefield",
     status: "in-transit",
     date: "Mar 10, 2024",
   },
@@ -75,4 +75,5 @@ export function ClientOrders() {
     </Table>
   )
 }
+
 

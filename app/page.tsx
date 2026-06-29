@@ -1,461 +1,94 @@
 import Link from "next/link"
 import { SiteHeader } from "@/components/site-header"
 import { Button } from "@/components/ui/button"
-import { Package, Truck, BarChart3, CreditCard, Leaf, MapPin, Clock, Shield, ChevronRight } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { MiniBars, StatusBadge } from "@/components/logiflow/ui-kit"
+import { deliveryStatusDistribution, revenueTrend, shipments, topDeliveryZones } from "@/lib/logiflow-data"
+import { AlertTriangle, ArrowRight, BarChart3, CheckCircle2, ClipboardList, CreditCard, Headphones, MapPin, PackageSearch, Route, ShieldCheck, Truck, Users } from "lucide-react"
 
-export default function Home() {
+const problems = ["Shipment updates scattered across calls and WhatsApp", "Clients keep asking for delivery status", "No clear view of pending, delayed, and completed deliveries", "Payments and invoices are hard to track", "Drivers and delivery teams are difficult to coordinate", "Reports are manually prepared from spreadsheets"]
+const features = [
+  ["Shipment Booking", ClipboardList, "Track every shipment from booking to delivery with structured pickup, package, driver, and SLA fields."],
+  ["Public Parcel Tracking", PackageSearch, "Give clients a clean tracking experience without manual follow-ups."],
+  ["Delivery Status Workflow", Route, "Move shipments through pickup, transit, out-for-delivery, delivered, delayed, and failed states."],
+  ["Client Management", Users, "Manage B2B clients, shipment history, account status, and invoice exposure."],
+  ["Driver Assignment", Truck, "Coordinate active shipments, availability, zones, and workload at a glance."],
+  ["Payment Visibility", CreditCard, "Monitor paid, pending, overdue, and failed invoices beside shipment records."],
+  ["Support Issue Tracking", Headphones, "Capture delayed delivery, wrong address, damaged parcel, payment, and complaint tickets."],
+  ["Operations Dashboard", BarChart3, "Monitor delayed shipments before they become client complaints."],
+] as const
+const workflow = ["Client books shipment", "Operations assigns pickup", "Driver updates delivery status", "Client tracks parcel", "Admin monitors revenue and delays"]
+const roles = [
+  ["Admin", "Full access to shipments, clients, drivers, payments, support, reports, and settings."],
+  ["Operations Manager", "Manage pickup queues, driver assignment, delivery exceptions, and performance reports."],
+  ["Client", "View own shipments, invoices, tracking timelines, and support requests."],
+  ["Driver", "Review assigned deliveries, update status, and follow route summaries."],
+]
+
+function HeroMockup() {
+  const latest = shipments.slice(0, 4)
   return (
-    <div className="flex min-h-screen flex-col">
-      <SiteHeader />
-      <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-gradient-to-b from-blue-50 to-white dark:from-gray-900 dark:to-background">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 items-center">
-              <div className="flex flex-col justify-center space-y-4">
-                <div className="space-y-2">
-                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                    Modern Logistics Management Platform
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Streamline your logistics operations with our all-in-one platform. Track deliveries, manage fleet,
-                    and process payments with ease.
-                  </p>
-                </div>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button size="lg" asChild>
-                    <Link href="/signup?role=client">Book a Parcel</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild>
-                    <Link href="/signup?role=admin">Manage Logistics</Link>
-                  </Button>
-                </div>
-              </div>
-              <div className="mx-auto lg:mx-0 relative">
-                <div className="relative h-[350px] w-[350px] sm:h-[400px] sm:w-[400px] lg:h-[500px] lg:w-[500px]">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-teal-400 rounded-full opacity-20 blur-3xl"></div>
-                  <img
-                    src="/placeholder.svg?height=500&width=500"
-                    alt="Logistics Dashboard"
-                    className="relative z-10 rounded-lg border shadow-xl"
-                    width={500}
-                    height={500}
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Powerful Features for Modern Logistics
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Everything you need to manage your logistics operations efficiently
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 md:grid-cols-2 lg:grid-cols-3">
-              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <Package className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Parcel Management</h3>
-                <p className="text-center text-muted-foreground">
-                  Track and manage all your parcels in real-time with detailed information.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <Truck className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Fleet Management</h3>
-                <p className="text-center text-muted-foreground">
-                  Monitor your vehicles, track maintenance, and optimize routes.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <MapPin className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Real-time Tracking</h3>
-                <p className="text-center text-muted-foreground">
-                  Track vehicles and parcels in real-time on an interactive map.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <BarChart3 className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Advanced Analytics</h3>
-                <p className="text-center text-muted-foreground">
-                  Gain insights with detailed analytics and reporting tools.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <CreditCard className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Payment Processing</h3>
-                <p className="text-center text-muted-foreground">
-                  Process payments with multiple options including crypto and fiat.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg border p-6 shadow-sm">
-                <div className="rounded-full bg-primary/10 p-3">
-                  <Leaf className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold">Eco Tokens</h3>
-                <p className="text-center text-muted-foreground">
-                  Earn and spend eco tokens for carbon-neutral deliveries.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">How It Works</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Simple process for both logistics companies and clients
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 py-12 md:grid-cols-3">
-              <div className="flex flex-col items-center space-y-2 rounded-lg p-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
-                  1
-                </div>
-                <h3 className="text-xl font-bold">Sign Up</h3>
-                <p className="text-center text-muted-foreground">Create an account as a logistics admin or client.</p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg p-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
-                  2
-                </div>
-                <h3 className="text-xl font-bold">Book or Manage</h3>
-                <p className="text-center text-muted-foreground">
-                  Book parcels as a client or manage logistics as an admin.
-                </p>
-              </div>
-              <div className="flex flex-col items-center space-y-2 rounded-lg p-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-foreground">
-                  3
-                </div>
-                <h3 className="text-xl font-bold">Track & Pay</h3>
-                <p className="text-center text-muted-foreground">
-                  Track parcels in real-time and process payments securely.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Pricing Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Simple, Transparent Pricing
-                </h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Choose the plan that works best for your business
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 lg:grid-cols-3">
-              <div className="flex flex-col rounded-lg border shadow-sm">
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold">Starter</h3>
-                  <div className="mt-4 text-4xl font-bold">
-                    $99<span className="text-sm font-normal text-muted-foreground">/month</span>
-                  </div>
-                  <p className="mt-2 text-muted-foreground">For small logistics operations</p>
-                  <ul className="mt-6 space-y-2">
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Up to 100 parcels/month</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>5 vehicles</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Basic analytics</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Email support</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col p-6 pt-0">
-                  <Button>Get Started</Button>
-                </div>
-              </div>
-              <div className="flex flex-col rounded-lg border shadow-sm bg-primary/5 border-primary/20">
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold">Professional</h3>
-                  <div className="mt-4 text-4xl font-bold">
-                    $299<span className="text-sm font-normal text-muted-foreground">/month</span>
-                  </div>
-                  <p className="mt-2 text-muted-foreground">For growing logistics businesses</p>
-                  <ul className="mt-6 space-y-2">
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Up to 1,000 parcels/month</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>20 vehicles</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Advanced analytics</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Priority support</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Eco token system</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col p-6 pt-0">
-                  <Button>Get Started</Button>
-                </div>
-              </div>
-              <div className="flex flex-col rounded-lg border shadow-sm">
-                <div className="p-6">
-                  <h3 className="text-2xl font-bold">Enterprise</h3>
-                  <div className="mt-4 text-4xl font-bold">Custom</div>
-                  <p className="mt-2 text-muted-foreground">For large logistics operations</p>
-                  <ul className="mt-6 space-y-2">
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Unlimited parcels</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Unlimited vehicles</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Custom analytics</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>24/7 dedicated support</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>Advanced eco token system</span>
-                    </li>
-                    <li className="flex items-center">
-                      <Shield className="mr-2 h-4 w-4 text-primary" />
-                      <span>API access</span>
-                    </li>
-                  </ul>
-                </div>
-                <div className="flex flex-col p-6 pt-0">
-                  <Button>Contact Sales</Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Contact Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-muted/50">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Get in Touch</h2>
-                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Have questions? Our team is here to help.
-                </p>
-              </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-6 py-12 lg:grid-cols-2">
-              <div className="flex flex-col space-y-4">
-                <div className="flex items-center space-x-3">
-                  <MapPin className="h-5 w-5 text-primary" />
-                  <span>123 Logistics Way, Shipping City, SC 12345</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Mail className="h-5 w-5 text-primary" />
-                  <span>contact@logitrack.com</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Phone className="h-5 w-5 text-primary" />
-                  <span>+1 (555) 123-4567</span>
-                </div>
-                <div className="flex items-center space-x-3">
-                  <Clock className="h-5 w-5 text-primary" />
-                  <span>Monday - Friday: 9am - 5pm</span>
-                </div>
-              </div>
-              <div className="rounded-lg border bg-card p-6 shadow-sm">
-                <form className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="first-name">First name</Label>
-                      <Input id="first-name" placeholder="John" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="last-name">Last name</Label>
-                      <Input id="last-name" placeholder="Doe" />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" placeholder="john.doe@example.com" type="email" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Message</Label>
-                    <Textarea id="message" placeholder="Your message here..." />
-                  </div>
-                  <Button type="submit" className="w-full">
-                    Send Message
-                  </Button>
-                </form>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 bg-primary text-primary-foreground">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-4 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                  Ready to Transform Your Logistics?
-                </h2>
-                <p className="max-w-[900px] md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  Join thousands of businesses that have streamlined their logistics operations with LogiTrack.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button size="lg" variant="secondary" asChild>
-                  <Link href="/signup">Get Started Today</Link>
-                </Button>
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
-                  asChild
-                >
-                  <Link href="#features">
-                    Learn More
-                    <ChevronRight className="ml-1 h-4 w-4" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </main>
-      <footer className="w-full border-t py-6 md:py-0">
-        <div className="container flex flex-col items-center justify-between gap-4 md:h-24 md:flex-row">
-          <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
-            © 2025 LogiTrack. All rights reserved.
-          </p>
-          <div className="flex items-center space-x-4">
-            <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
-              Terms
-            </Link>
-            <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
-              Privacy
-            </Link>
-            <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground">
-              Contact
-            </Link>
+    <div className="product-shadow rounded-2xl border bg-white p-4">
+      <div className="flex items-center justify-between border-b pb-3">
+        <div><div className="text-sm font-semibold">Operations Control Center</div><div className="text-xs text-muted-foreground">Today, 29 June 2026</div></div>
+        <Badge variant="info">Live demo</Badge>
+      </div>
+      <div className="grid gap-3 py-4 sm:grid-cols-3">
+        {[["Shipments", "1,248"], ["Delayed", "9"], ["Revenue", "INR 4.68L"]].map(([label, value]) => <div key={label} className="rounded-xl border bg-slate-50 p-3"><div className="text-xs text-muted-foreground">{label}</div><div className="mt-1 text-xl font-bold">{value}</div></div>)}
+      </div>
+      <div className="grid gap-4 lg:grid-cols-[1.25fr_.75fr]">
+        <div className="rounded-xl border">
+          <div className="flex items-center justify-between border-b bg-slate-50 px-3 py-2 text-sm font-medium"><span>Shipment status table</span><span className="text-xs text-muted-foreground">4 active</span></div>
+          <div className="divide-y">
+            {latest.map((shipment) => <div key={shipment.trackingId} className="grid grid-cols-[1fr_auto] gap-3 px-3 py-3 text-sm"><div><div className="font-semibold text-primary">{shipment.trackingId}</div><div className="text-muted-foreground">{shipment.client} to {shipment.deliveryZone}</div></div><StatusBadge value={shipment.status} /></div>)}
           </div>
         </div>
-      </footer>
+        <div className="space-y-3">
+          <div className="rounded-xl border p-3"><div className="mb-2 text-sm font-medium">Top delivery zones</div><MiniBars data={topDeliveryZones.slice(0, 4).map((item) => ({ label: item.zone, value: item.shipments }))} /></div>
+          <div className="rounded-xl border border-orange-200 bg-orange-50 p-3"><div className="flex items-center gap-2 text-sm font-semibold text-orange-800"><AlertTriangle className="h-4 w-4" />Delayed shipments alert</div><p className="mt-1 text-xs text-orange-700">9 shipments need review before SLA breach.</p></div>
+        </div>
+      </div>
     </div>
   )
 }
 
-function Mail(props) {
+export default function Home() {
   return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <rect width="20" height="16" x="2" y="4" rx="2" />
-      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-    </svg>
+    <div className="min-h-screen bg-background">
+      <SiteHeader />
+      <main>
+        <section className="logistics-grid border-b bg-white">
+          <div className="container grid gap-10 py-16 lg:grid-cols-[1fr_1.05fr] lg:py-20">
+            <div className="flex flex-col justify-center">
+              <Badge variant="outline" className="w-fit border-slate-300 bg-white">DevShuttle Lab Build</Badge>
+              <h1 className="mt-6 max-w-4xl text-4xl font-bold tracking-tight text-slate-950 sm:text-5xl lg:text-6xl">Run shipments, tracking, clients, and delivery operations from one clean platform.</h1>
+              <p className="mt-5 max-w-2xl text-lg leading-8 text-slate-600">LogiFlow helps logistics teams manage parcel booking, delivery status, client visibility, payment tracking, and operational workflows without scattered spreadsheets or manual follow-ups.</p>
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row"><Button size="lg" asChild><Link href="/admin">View Demo Dashboard<ArrowRight className="ml-2 h-4 w-4" /></Link></Button><Button size="lg" variant="outline" asChild><Link href={`/tracking/${shipments[0].trackingId}`}>Track a Sample Shipment</Link></Button></div>
+              <div className="mt-8 grid max-w-xl grid-cols-3 gap-3 text-sm"><div><div className="font-bold">92%</div><div className="text-muted-foreground">on-time delivery</div></div><div><div className="font-bold">8 zones</div><div className="text-muted-foreground">active coverage</div></div><div><div className="font-bold">4 roles</div><div className="text-muted-foreground">demo access</div></div></div>
+            </div>
+            <HeroMockup />
+          </div>
+        </section>
+
+        <section className="container py-16">
+          <div className="max-w-2xl"><Badge variant="warning">Operational pain</Badge><h2 className="mt-4 text-3xl font-bold tracking-tight">Logistics operations become messy when everything is tracked manually.</h2></div>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">{problems.map((problem) => <Card key={problem} className="border-slate-200"><CardContent className="flex gap-3 p-5"><AlertTriangle className="mt-0.5 h-5 w-5 text-amber-500" /><span className="text-sm font-medium text-slate-700">{problem}</span></CardContent></Card>)}</div>
+        </section>
+
+        <section id="features" className="border-y bg-slate-50 py-16"><div className="container"><div className="max-w-2xl"><Badge variant="info">Solution</Badge><h2 className="mt-4 text-3xl font-bold tracking-tight">One platform for booking, tracking, clients, payments, and delivery workflows.</h2></div><div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">{features.map(([title, Icon, copy]) => <Card key={title} className="bg-white"><CardHeader><span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary"><Icon className="h-5 w-5" /></span><CardTitle className="text-base">{title}</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">{copy}</CardContent></Card>)}</div></div></section>
+
+        <section id="workflow" className="container py-16"><div className="max-w-2xl"><Badge variant="outline">Workflow</Badge><h2 className="mt-4 text-3xl font-bold tracking-tight">From booking to delivery confirmation.</h2></div><div className="mt-8 grid gap-4 md:grid-cols-5">{workflow.map((step, index) => <div key={step} className="rounded-2xl border bg-white p-5 shadow-sm"><div className="flex h-9 w-9 items-center justify-center rounded-full bg-slate-950 text-sm font-bold text-white">{index + 1}</div><div className="mt-4 text-sm font-semibold">{step}</div></div>)}</div></section>
+
+        <section id="dashboard" className="border-y bg-white py-16"><div className="container grid gap-8 lg:grid-cols-[.8fr_1.2fr]"><div><Badge variant="success">Dashboard preview</Badge><h2 className="mt-4 text-3xl font-bold tracking-tight">A control center for shipments, delays, drivers, and payments.</h2><p className="mt-3 text-muted-foreground">Use dashboard cards, status distribution, revenue trend, delayed shipment alerts, driver workload, and recent payment records to keep operations moving.</p></div><div className="grid gap-4 md:grid-cols-2"><Card><CardHeader><CardTitle>Delivery status chart</CardTitle></CardHeader><CardContent><MiniBars data={deliveryStatusDistribution} /></CardContent></Card><Card><CardHeader><CardTitle>Revenue trend</CardTitle></CardHeader><CardContent><MiniBars data={revenueTrend.map((item) => ({ label: item.label, value: Math.round(item.value / 1000) }))} /></CardContent></Card></div></div></section>
+
+        <section className="container grid gap-8 py-16 lg:grid-cols-2"><div><Badge variant="info">Tracking experience</Badge><h2 className="mt-4 text-3xl font-bold tracking-tight">A customer-facing parcel tracking flow that feels real.</h2><p className="mt-3 text-muted-foreground">Customers can enter a tracking ID, see current status, estimated delivery, last updated location, sender/receiver summary, and delivery history.</p><Button className="mt-6" asChild><Link href={`/tracking/${shipments[0].trackingId}`}>Open tracking preview</Link></Button></div><Card><CardHeader><CardTitle>{shipments[0].trackingId}</CardTitle></CardHeader><CardContent className="space-y-4"><StatusBadge value={shipments[0].status} /><div className="rounded-xl border bg-slate-50 p-4"><div className="flex items-center gap-2 text-sm font-medium"><MapPin className="h-4 w-4 text-primary" />{shipments[0].lastUpdatedLocation}</div><p className="mt-1 text-sm text-muted-foreground">Estimated delivery: {shipments[0].estimatedDeliveryDate}</p></div>{shipments[0].timeline.slice(0, 4).map((event) => <div key={event.time} className="flex gap-3 text-sm"><CheckCircle2 className="h-4 w-4 text-emerald-600" /><div><div className="font-medium">{event.label}</div><div className="text-muted-foreground">{event.location} - {event.time}</div></div></div>)}</CardContent></Card></section>
+
+        <section className="border-y bg-slate-50 py-16"><div className="container"><div className="max-w-2xl"><Badge variant="outline">Role-based access</Badge><h2 className="mt-4 text-3xl font-bold tracking-tight">Designed for every logistics workflow owner.</h2></div><div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">{roles.map(([role, copy]) => <Card key={role} className="bg-white"><CardHeader><ShieldCheck className="h-6 w-6 text-primary" /><CardTitle>{role}</CardTitle></CardHeader><CardContent className="text-sm text-muted-foreground">{copy}</CardContent></Card>)}</div></div></section>
+
+        <section className="container py-16"><div className="rounded-3xl bg-slate-950 p-8 text-white md:p-12"><div className="max-w-2xl"><h2 className="text-3xl font-bold tracking-tight">See how LogiFlow manages real delivery operations.</h2><p className="mt-3 text-slate-300">Explore the demo dashboard and tracking flow to see how shipments, clients, drivers, payments, and delivery updates connect in one platform.</p><Button className="mt-6" variant="secondary" asChild><Link href="/admin">View Demo Dashboard</Link></Button></div></div></section>
+      </main>
+      <footer className="border-t bg-white"><div className="container py-8 text-sm text-muted-foreground">LogiFlow is a DevShuttle Lab Build created to demonstrate logistics workflow automation, dashboard development, and operations platform engineering.</div></footer>
+    </div>
   )
 }
-
-function Phone(props) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
-    </svg>
-  )
-}
-
-function Label({ htmlFor, children }) {
-  return (
-    <label
-      htmlFor={htmlFor}
-      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-    >
-      {children}
-    </label>
-  )
-}
-
-function Input(props) {
-  return (
-    <input
-      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      {...props}
-    />
-  )
-}
-
-function Textarea(props) {
-  return (
-    <textarea
-      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-      {...props}
-    />
-  )
-}
-
